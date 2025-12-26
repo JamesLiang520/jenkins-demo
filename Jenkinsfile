@@ -1,39 +1,49 @@
 pipeline {
     agent any
 
-    stages {
+    parameters {
+        choice(
+            name: 'ENV',
+            choices: ['dev', 'test', 'prod'], // 默认值 = 第一个 = dev
+            description: 'Deployment environment'
+        )
+    }
 
+    stages {
         stage('Checkout') {
             steps {
-                echo 'Checkout source code'
+                echo '🔄 Checkout source code'
             }
         }
 
         stage('Build') {
             steps {
-                sh 'echo "Building application..."'
+                echo '🏗 Build stage'
+                sh "echo Building for environment: ${params.ENV}"
             }
         }
 
         stage('Test') {
             steps {
-                sh 'echo "Running tests..."'
+                echo '🧪 Test stage'
+                sh "echo Testing for environment: ${params.ENV}"
             }
         }
 
         stage('Deploy') {
             steps {
-                sh 'echo "Deploying application..."'
+                echo "🚀 Deploy stage"
+                sh "echo Deploying to environment: ${params.ENV}"
             }
         }
     }
 
     post {
         success {
-            echo '✅ Pipeline success'
+            echo '✅ Pipeline SUCCESS'
         }
         failure {
-            echo '❌ Pipeline failed'
+            echo '❌ Pipeline FAILED'
         }
     }
 }
